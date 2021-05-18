@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -18,19 +19,31 @@ class _TaskState extends State<Task> {
   TextEditingController taskTextController;
   TextEditingController taskDateController;
 
+  DateTime currentDate = DateTime.now();
+  final DateFormat formatter = DateFormat('dd-MMM-yyyy');
+  //final DateFormat formatSave = DateFormat('dd-MM-yyyy');
+
+  String formattedDate = "";
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     taskTextController = TextEditingController();
-    taskDateController = TextEditingController();
+    //taskDateController = TextEditingController();
+    //print('add date');
+    formattedDate = formatter.format(currentDate);
+    taskDateController = TextEditingController(text: formattedDate);
+    //print(formatterSave.fo);
+    // String _savedDate = taskDateController.text.replaceAll('-', '.');
+    //  print(_savedDate);
   }
 
   @override
   Widget build(BuildContext context) {
-    final DateFormat formatter = DateFormat('dd.MM.yyyy');
     return Scaffold(
       body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.only(
@@ -69,32 +82,30 @@ class _TaskState extends State<Task> {
                 textController: taskTextController,
               ),
               SizedBox(
-                height: 40,
+                height: MediaQuery.of(context).size.height / 20,
               ),
               InputDate(
                 dateController: taskDateController,
               ),
               SizedBox(
-                height: 40,
+                height: MediaQuery.of(context).size.height / 20,
               ),
               GestureDetector(
                 onTap: () async {
-                  print(
-                      taskTextController.text + ':' + taskDateController.text);
+                  //print(taskDateController.text);
+                  DateTime setDate =
+                      DateFormat("dd-MMM-yy").parse(taskDateController.text);
+                  Timestamp timestamp =
+                      Timestamp.fromDate(DateTime.parse(setDate.toString()));
+                  //print(setDate);
                   Map<String, dynamic> task = Map();
                   task['TaskName'] = taskTextController.text;
-                  task['TaskDate'] = DateTime.now();
-                  //formatter.parse(taskDateController.text);
-                  // TODO: RESOLVE INVALID DATE FORMAT  ERROR FOR PARSE
-                  //DateTime.parse(taskDateController.text);
-                  //formatter.format(taskDateController.text);
-                  // task['TaskStatus'] = 'a';
-                  // task['TaskComplete'] = 'a';
-                  // task['CreateDate'] = 'a';
-                  // task['UpdateDate'] = 'a';
+                  task['TaskDate'] = timestamp; //timestamp
+                  FocusManager.instance.primaryFocus
+                      .unfocus(); //to hide keyboard on save
                   try {
                     bool isSaved = await auth.create(task);
-                    print(isSaved);
+                    //      print(isSaved);
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -106,9 +117,10 @@ class _TaskState extends State<Task> {
                             actions: [
                               FlatButton(
                                 onPressed: () {
-                                  // Navigator.of(context).pop(HomeScreen.id);
-                                  Navigator.popUntil(
-                                      context, ModalRoute.withName("Home"));
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  // Navigator.pop(
+                                  //     context, ModalRoute.withName("Home"));
                                 },
                                 child: Text("OK"),
                               )
@@ -116,11 +128,11 @@ class _TaskState extends State<Task> {
                           );
                         });
                   } catch (e) {
-                    print(e.toString());
+                    //   print(e.toString());
                   }
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 40),
                   child: Text(
                     Constants.kBtnText,
                     style: Constants.kInputHintStyle,

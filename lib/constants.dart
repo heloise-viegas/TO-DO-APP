@@ -14,7 +14,7 @@ class Constants {
   static const String kWelcomeText = 'What\'s up,';
   static const String kLblCategory = 'CATEGORIES';
   static const String kLblToday = 'TODAY\'S TASKS';
-  static const String kCardTitle = '40 tasks';
+  static const String kCardTitle = ' tasks';
   static const String kCardType = 'Business';
   static const String kTaskItemName = 'Daily meeting with team';
   static const String kUserName = 'Heloise Viegas';

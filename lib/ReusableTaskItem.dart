@@ -4,15 +4,16 @@ import 'package:z_to_do/authenticator.dart';
 import 'constants.dart';
 
 class ReusableTaskItem extends StatefulWidget {
-  Authenticator auth = Authenticator();
-  bool isComplete = false;
+  bool isComplete;
+  final String taskId;
   final String taskName;
-  ReusableTaskItem(this.taskName);
+  ReusableTaskItem(this.taskId, this.taskName, this.isComplete);
   @override
   _ReusableTaskItemState createState() => _ReusableTaskItemState();
 }
 
 class _ReusableTaskItemState extends State<ReusableTaskItem> {
+  Authenticator auth = Authenticator();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -21,13 +22,17 @@ class _ReusableTaskItemState extends State<ReusableTaskItem> {
         onTap: //onTapped,
             () {
           setState(() {
-            widget.isComplete = true;
+            widget.isComplete = !widget.isComplete;
+            auth.updateTask(widget.taskId, widget.isComplete);
+            //   print(widget.taskId);
           });
 
           // print('tapped');
         },
         child: Container(
           height: 80,
+          //MediaQuery.of(context).size.height / 12, //80,
+          // width: MediaQuery.of(context).size.width,
           //width: 210,
           decoration: BoxDecoration(
             color: Constants.kReusableCardColour,
@@ -47,12 +52,15 @@ class _ReusableTaskItemState extends State<ReusableTaskItem> {
                 SizedBox(
                   width: 20,
                 ),
-                Text(
-                  //Constants.kTaskItemName,
-                  widget.taskName,
-                  style: widget.isComplete
-                      ? Constants.kTaskItemStrikeStyle
-                      : Constants.kTaskItemStyle,
+                Expanded(
+                  child: Text(
+                    //Constants.kTaskItemName,
+                    widget.taskName,
+                    style: widget.isComplete
+                        ? Constants.kTaskItemStrikeStyle
+                        : Constants.kTaskItemStyle,
+                    overflow: TextOverflow.visible,
+                  ),
                 ),
               ],
             ),

@@ -19,37 +19,44 @@ class _InputDateState extends State<InputDate> {
   @override
   void initState() {
     super.initState();
-    formattedDate = formatter.format(selectedDate);
-    widget.dateController = TextEditingController(text: formattedDate);
+    // formattedDate = formatter.format(selectedDate);
+    // widget.dateController = TextEditingController(text: formattedDate);
+    // print('init date');
+    // print(widget.dateController);
   }
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: widget.dateController,
-      cursorColor: Constants.kFabColour,
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(50),
-          borderSide: BorderSide(width: 2, color: Constants.kDrawerBackIcon),
+    return Container(
+      //  height: MediaQuery.of(context).size.height / 12,
+      //width: MediaQuery.of(context).size.width / 12,
+      child: TextField(
+        controller: widget.dateController,
+        cursorColor: Constants.kFabColour,
+        decoration: InputDecoration(
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(50),
+            borderSide: BorderSide(width: 2, color: Constants.kDrawerBackIcon),
+          ),
+          border: InputBorder.none,
+          // enabledBorder: OutlineInputBorder(
+          //   borderRadius: BorderRadius.circular(50),
+          //   borderSide:
+          //       BorderSide(width: 2, color: Constants.kDrawerBackIcon),
+          // ),
         ),
-        border: InputBorder.none,
-        // enabledBorder: OutlineInputBorder(
-        //   borderRadius: BorderRadius.circular(50),
-        //   borderSide:
-        //       BorderSide(width: 2, color: Constants.kDrawerBackIcon),
-        // ),
+        style: Constants.kInputTextStyle,
+        onTap: () async {
+          // print(
+          //   '1.' + selectedDate.toString(),
+          // );
+          await selectDate(context);
+          // print(selectedDate);
+          formattedDate = formatter.format(selectedDate);
+          widget.dateController.text = formattedDate;
+          // print(formattedDate);
+        },
       ),
-      style: Constants.kInputTextStyle,
-      onTap: () async {
-        // print(
-        //   '1.' + selectedDate.toString(),
-        // );
-        await selectDate(context);
-
-        formattedDate = formatter.format(selectedDate);
-        widget.dateController.text = formattedDate;
-      },
     );
   }
 

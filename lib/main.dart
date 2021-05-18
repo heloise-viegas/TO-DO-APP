@@ -10,23 +10,25 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //await Firebase.initializeApp();
   Authenticator auth = Authenticator();
-
   List<String> fullName;
   String photoUrl;
   FirebaseUser user = await auth.isLoggedIn();
+  print('isLogged');
   //print(user.displayName);
   if (user != null) {
-    print('not null');
+    //  print('not null');
     fullName = user.displayName.split(" ");
     photoUrl = user.photoUrl;
   }
-
+  // print('auth');
+  //print(auth.isLoggedIn.toString());
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       darkTheme: ThemeData().copyWith(
           // primaryColorDark: Constants.kBgColour,
           ),
+
       initialRoute: auth.isLoggedIn != null ? HomeScreen.id : Login.id,
 
       //Login.id, // HomeScreen.id,

@@ -5,6 +5,9 @@ import 'constants.dart';
 class ReusableCard extends StatelessWidget {
   final Animation progressBarColour =
       new AlwaysStoppedAnimation<Color>(Constants.kTaskItemColour);
+  final String cardDay;
+  final String count;
+  ReusableCard({this.cardDay, this.count});
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +16,9 @@ class ReusableCard extends StatelessWidget {
       child: Container(
         height: 130,
         width: 210,
+
+        // height: MediaQuery.of(context).size.height / 2, //80,
+        // width: MediaQuery.of(context).size.width / 2,
         decoration: BoxDecoration(
           color: Constants.kReusableCardColour,
           borderRadius: BorderRadius.circular(28),
@@ -23,14 +29,16 @@ class ReusableCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                Constants.kCardTitle,
+                // Constants.kCardTitle,
+                count + Constants.kCardTitle,
                 style: Constants.kCardTitleStyle,
               ),
               SizedBox(
                 height: 10,
               ),
               Text(
-                Constants.kCardType,
+                // Constants.kCardType,
+                cardDay,
                 style: Constants.kCardTypeStyle,
               ),
               SizedBox(

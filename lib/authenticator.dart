@@ -24,7 +24,7 @@ class Authenticator {
         await _firebaseAuth.signInWithCredential(authCredential);
     FirebaseUser user = authResult.user;
 
-    print("User:" + user.photoUrl);
+    // print("User:" + user.photoUrl);
     // List<String> fullName = user.displayName.split(" ");
     //user.photoUrl;
     return user;
@@ -33,8 +33,8 @@ class Authenticator {
   //Sign out
   void signOut() {
     _googleSignIn.signOut();
-    print('sign out');
-    print(_googleSignIn.currentUser);
+    // print('sign out');
+    // print(_googleSignIn.currentUser);
   }
 
   //IF LOGGED IN
@@ -68,76 +68,152 @@ class Authenticator {
       );
       return true;
     } catch (e) {
-      print('Error saving task:' + e.toString());
+      // print('Error saving task:' + e.toString());
     }
   }
 
   //READ
   Future<dynamic> read() async {
-    print('read');
-    // print(_googleSignIn.isSignedIn());
-    List<String> taskList = [];
-
+    //  print('read');
+    List<Map<String, dynamic>> taskItems = [];
     try {
       CollectionReference _collectionRef = _firestore.collection('tasks');
 
       // Get docs from collection reference
-      QuerySnapshot querySnapshot = await _collectionRef.getDocuments();
-      // DocumentReference documentReference= await _collectionRef.document('doc_id').;
-
-      // Get data from docs and convert map to List
-      final allData = querySnapshot.documents.map((doc) {
-        return doc.data;
-      }).toList(); //(doc)=> doc.data
-
-      allData.forEach((task) {
-        //print(task['TaskName']);
-        taskList.add(task['TaskName']);
-      });
+      //gets all the docs in the collection
+      // QuerySnapshot querySnapshot = await _collectionRef.getDocuments();
+      //gets all the docs with status=true in the collection
+      QuerySnapshot querySnapshot = await _collectionRef
+          .where('TaskStatus', isEqualTo: true)
+          .where(
+            'TaskDate',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(
+              DateTime.parse(
+                DateTime.now().toString().split(" ")[0].toString(),
+              ),
+            ),
+          )
+          //.orderBy('TaskDate', descending: true) //TODO:// RESOLVE
+          .getDocuments();
+      // Get dataId from docs and convert map to List<String>
       final allDataId = querySnapshot.documents.map((doc) {
         return doc.documentID;
       }).toList();
-      allDataId.forEach((taskId) {
-        print('taskId');
-        print(taskId);
-        //taskList.add(task['TaskName']);
-      });
+      for (int i = 0; i < allDataId.length; i++) {
+        taskItems.add({'TaskId': allDataId[i]});
+      }
 
-      //print(allData);
-/////////////////////////////////////
-      // StreamBuilder(
-      //   stream: Firestore.instance.collection('tasks').snapshots(),
-      //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-      //     print('builder');
-      //     if (!snapshot.hasData) {
-      //       print('1');
-      //       return Center(
-      //         child: CircularProgressIndicator(),
-      //       );
-      //     } else {
-      //       print('2');
-      //       return ListView(
-      //         children: snapshot.data.documents.map((document) {
-      //           print(document['TaskName']);
-      //         }).toList(),
-      //       );
-      //     }
-      //   },
-      // );
-      //////////////////////////////////////////////
+      // Get data from docs and convert map to List<Map>
+      final allData = querySnapshot.documents.map((doc) {
+        return doc.data;
+      }).toList();
+      for (int j = 0; j < allData.length; j++) {
+        taskItems[j]['TaskName'] = allData[j]['TaskName'];
+        taskItems[j]['TaskComplete'] = allData[j]['TaskComplete'];
+        taskItems[j]['TaskDate'] =
+            allData[j]['TaskDate'].toDate().toString().substring(0, 10);
+      }
     } catch (e) {
-      print('Error saving task:' + e.toString());
+      print('Error reading task:' + e.toString());
     }
-    return taskList;
+    return taskItems;
   }
 
   //UPDATE
-  void updateTask() async {
+  void updateTask(String id, bool isComplete) async {
     try {
-      //   await _firestore.collection('tasks').document()
-
+      await _firestore.collection('tasks').document(id).updateData(
+          {'TaskComplete': isComplete, 'UpdateDate': DateTime.now()});
     } catch (e) {
       print(e);
     }
+  }
+
+  //DELETE
+  void deleteTask(String id) async {
+    try {
+      // await _firestore.collection('tasks').document(id).delete(); //hard delete
+      await _firestore
+          .collection('tasks')
+          .document(id)
+          .updateData({'TaskStatus': false, 'UpdateDate': DateTime.now()});
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  //GET COUNT FOR DAY
+  Future<void> getCount() async {
+    //TODO: CHECK DAY OF THE WEEK,AND THEN PULL DATA ACCORDINGLY
+    print('l');
+    int dayOfWeek = DateTime.now().weekday;
+    List<Map<String, dynamic>> taskItems = [];
+
+    try {
+      CollectionReference _collectionRef = _firestore.collection('tasks');
+      //gets all the docs which are not deleted  in the collection
+      QuerySnapshot querySnapshot = await _collectionRef
+          //   .where('TaskStatus', isEqualTo: true)
+          .where(
+            'TaskDate',
+            isLessThan: Timestamp.fromDate(
+              DateTime.parse(
+                DateTime.now().toString().split(" ")[0].toString(),
+              ),
+            ),
+          )
+          .where(
+            'TaskDate',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(
+              DateTime.parse(
+                DateTime.now()
+                    .subtract(Duration(days: 2))
+                    .toString()
+                    .split(" ")[0]
+                    .toString(),
+              ),
+            ),
+          )
+          .getDocuments();
+      //today - nth day of the week
+      print(
+        DateTime.now()
+            .subtract(Duration(days: 2))
+            .toString()
+            .split(" ")[0]
+            .toString(),
+      );
+      //
+      //   // Get dataId from docs and convert map to List<String>
+      //   final allDataId = querySnapshot.documents.map((doc) {
+      //     return doc.documentID;
+      //   }).toList();
+      //   for (int i = 0; i < allDataId.length; i++) {
+      //     taskItems.add({'TaskId': allDataId[i]});
+      //   }
+      //
+      //   // Get data from docs and convert map to List<Map>
+      final allData = querySnapshot.documents.map((doc) {
+        return doc.data;
+      }).toList();
+      for (int j = 0; j < allData.length; j++) {
+        taskItems[j]['TaskName'] = allData[j]['TaskName'];
+        taskItems[j]['TaskComplete'] = allData[j]['TaskComplete'];
+        taskItems[j]['TaskDate'] =
+            allData[j]['TaskDate'].toDate().toString().substring(0, 10);
+      }
+      for (int i = 0; i < taskItems.length; i++) {
+        print(DateTime.parse(taskItems[i]['TaskDate']).weekday);
+        //.toString().split(" ")[0].toString()
+        switch (DateTime.parse(taskItems[i]['TaskDate']).weekday) {
+          case 1:
+        }
+      }
+
+      print(allData);
+    } catch (e) {
+      //  print('Error saving task:' + e.toString());
+    }
+    return '';
   }
 }

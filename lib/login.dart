@@ -7,11 +7,12 @@ import 'constants.dart';
 
 class Login extends StatelessWidget {
   static String id = 'LoginScreen';
-  Authenticator auth = Authenticator();
+  final Authenticator auth = Authenticator();
   FirebaseUser user;
 
   @override
   Widget build(BuildContext context) {
+    //  print('login init');
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -21,20 +22,27 @@ class Login extends StatelessWidget {
                 user = await auth.signInWitGoogle();
                 List<String> fullName = user.displayName.split(" ");
                 String photoUrl = user.photoUrl;
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      settings: RouteSettings(
-                          name: "Home"), //used for pop until in Add task screen
-                      builder: (context) {
-                        return HomeScreen(
-                          userName: fullName.first,
-                          photoUrl: photoUrl,
-                        );
-                      },
-                    ));
+                // Navigator.pushReplacement(
+                //     context,
+                //     MaterialPageRoute(
+                //       settings: RouteSettings(
+                //           name: "Home"), //used for pop until in Add task screen
+                //       builder: (context) {
+                //         return HomeScreen(
+                //           userName: fullName.first,
+                //           photoUrl: photoUrl,
+                //         );
+                //       },
+                //     ));
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return HomeScreen(
+                    userName: fullName.first,
+                    photoUrl: photoUrl,
+                  );
+                }));
               } catch (e) {
-                print(e.toString());
+                //     print(e.toString());
               }
             },
             child: Container(
