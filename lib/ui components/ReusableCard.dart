@@ -6,7 +6,7 @@ class ReusableCard extends StatelessWidget {
   final Animation progressBarColour =
       new AlwaysStoppedAnimation<Color>(Constants.kTaskItemColour);
   final String cardDay;
-  final String count;
+  final int count;
   ReusableCard({this.cardDay, this.count});
 
   @override
@@ -30,7 +30,9 @@ class ReusableCard extends StatelessWidget {
             children: [
               Text(
                 // Constants.kCardTitle,
-                count + Constants.kCardTitle,
+                count > 1
+                    ? count.toString() + Constants.kCardTitle + 's'
+                    : count.toString() + Constants.kCardTitle,
                 style: Constants.kCardTitleStyle,
               ),
               SizedBox(
@@ -45,7 +47,7 @@ class ReusableCard extends StatelessWidget {
                 height: 20,
               ),
               LinearProgressIndicator(
-                value: 0.5,
+                value: count.toDouble() / 10,
                 backgroundColor: Constants.kProgBarColour,
                 valueColor: progressBarColour,
               ),

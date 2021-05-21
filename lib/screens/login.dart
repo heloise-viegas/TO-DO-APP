@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:z_to_do/home.dart';
 
-import 'authenticator.dart';
-import 'constants.dart';
+import 'file:///D:/FlutterProjects/z_to_do/lib/screens/home.dart';
+
+import '../firebase connections/authenticator.dart';
+import '../ui components/constants.dart';
 
 class Login extends StatelessWidget {
   static String id = 'LoginScreen';

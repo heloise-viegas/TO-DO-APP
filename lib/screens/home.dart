@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:z_to_do/addTask.dart';
-import 'package:z_to_do/authenticator.dart';
-import 'package:z_to_do/login.dart';
 
-import 'ReusableCard.dart';
-import 'ReusableTaskItem.dart';
-import 'constants.dart';
-import 'drawer.dart';
+import 'file:///D:/FlutterProjects/z_to_do/lib/firebase%20connections/authenticator.dart';
+import 'file:///D:/FlutterProjects/z_to_do/lib/screens/addTask.dart';
+import 'file:///D:/FlutterProjects/z_to_do/lib/screens/login.dart';
+
+import '../ui components/ReusableCard.dart';
+import '../ui components/ReusableTaskItem.dart';
+import '../ui components/constants.dart';
+import '../ui components/drawer.dart';
 
 const List<String> days = [
   'Monday',
@@ -21,11 +22,17 @@ const List<String> days = [
 Authenticator auth = Authenticator();
 // List<String> items;
 List<Map<String, dynamic>> items;
+List<Map<String, dynamic>> tasksPerDay;
 //List<String>.generate(20, (index) => "Daily Meeting ${index + 1}");
 
 Future<List<Map<String, dynamic>>> getList() async {
   items = await auth.read();
   return items;
+}
+
+Future<List<Map<String, dynamic>>> getTaskCount() async {
+  tasksPerDay = await auth.getCount();
+  return tasksPerDay;
 }
 
 class HomeScreen extends StatelessWidget {
@@ -69,7 +76,6 @@ class HomePortrait extends StatefulWidget {
 
 class _HomePortraitState extends State<HomePortrait> {
   @override
-  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -98,14 +104,14 @@ class _HomePortraitState extends State<HomePortrait> {
               padding: const EdgeInsets.only(right: 25),
               child: Row(
                 children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.search,
-                      color: Constants.kIconColour,
-                      size: Constants.kIconSize,
-                    ),
-                    onPressed: () {},
-                  ),
+                  // IconButton(
+                  //   icon: Icon(
+                  //     Icons.search,
+                  //     color: Constants.kIconColour,
+                  //     size: Constants.kIconSize,
+                  //   ),
+                  //   onPressed: () {},
+                  // ),
                   IconButton(
                     icon: Icon(
                       Icons.close_outlined,
@@ -160,15 +166,27 @@ class _HomePortraitState extends State<HomePortrait> {
                 ),
                 Container(
                   height: 150, //MediaQuery.of(context).size.height / 6,
-                  child: ListView.builder(
-                    itemCount: days.length,
-                    itemBuilder: (context, int i) {
-                      return ReusableCard(
-                        cardDay: days[i],
-                        count: '10', //TODO: GET COUNT FOR DAY i
+                  child: FutureBuilder(
+                    future: getTaskCount(),
+                    builder: (context, AsyncSnapshot snapshot) {
+                      return ListView.builder(
+                        itemCount: days.length,
+                        itemBuilder: (context, int i) {
+                          if (!snapshot.hasData) {
+                            //  print('no data');
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          return ReusableCard(
+                            cardDay: days[i],
+                            count: tasksPerDay[i][
+                                'TaskCount'], //error on i==0 since in map there is no 0
+                          );
+                        },
+                        scrollDirection: Axis.horizontal,
                       );
                     },
-                    scrollDirection: Axis.horizontal,
                   ),
                 ),
                 Padding(
@@ -267,16 +285,6 @@ class HomeLandscape extends StatefulWidget {
 }
 
 class _HomeLandscapeState extends State<HomeLandscape> {
-  // Authenticator auth = Authenticator();
-  // // List<String> items;
-  // List<Map<String, dynamic>> items;
-  // //List<String>.generate(20, (index) => "Daily Meeting ${index + 1}");
-  //
-  // Future<List<Map<String, dynamic>>> getList() async {
-  //   items = await auth.read();
-  //   return items;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -309,14 +317,14 @@ class _HomeLandscapeState extends State<HomeLandscape> {
             padding: const EdgeInsets.only(right: 25),
             child: Row(
               children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.search,
-                    color: Constants.kIconColour,
-                    size: Constants.kIconSize,
-                  ),
-                  onPressed: () {},
-                ),
+                // IconButton(
+                //   icon: Icon(
+                //     Icons.search,
+                //     color: Constants.kIconColour,
+                //     size: Constants.kIconSize,
+                //   ),
+                //   onPressed: () {},
+                // ),
                 IconButton(
                   icon: Icon(
                     Icons.close_outlined,
@@ -375,16 +383,27 @@ class _HomeLandscapeState extends State<HomeLandscape> {
                       ),
                       Container(
                         height: 225, //MediaQuery.of(context).size.height / 6,
-                        child: ListView.builder(
-                          itemCount: days.length,
-                          itemBuilder: (context, int i) {
-                            return ReusableCard(
-                              cardDay: days[i],
-                              count: '10',
-                            );
-                          },
-                          scrollDirection: Axis.vertical,
-                        ),
+                        child: FutureBuilder(
+                            future: getTaskCount(),
+                            builder: (context, AsyncSnapshot snapshot) {
+                              if (!snapshot.hasData) {
+                                //  print('no data');
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              return ListView.builder(
+                                itemCount: days.length,
+                                itemBuilder: (context, int i) {
+                                  return ReusableCard(
+                                    cardDay: days[i],
+                                    count: tasksPerDay[i][
+                                        'TaskCount'], //error on i==0 since in map there is no 0
+                                  );
+                                },
+                                scrollDirection: Axis.vertical,
+                              );
+                            }),
                       ),
                     ],
                   ),

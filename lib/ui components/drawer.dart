@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:z_to_do/home.dart';
+
+import 'file:///D:/FlutterProjects/z_to_do/lib/screens/allTasks.dart';
 
 import 'constants.dart';
 
@@ -97,7 +98,7 @@ class AppDrawer extends StatelessWidget {
                   ),
                   ListTile(
                     onTap: () {
-                      auth.getCount();
+                      Navigator.popAndPushNamed(context, AllTasks.id);
                     },
                     title: Text(
                       Constants.kTempTile,

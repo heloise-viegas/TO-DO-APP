@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:z_to_do/addTask.dart';
-import 'package:z_to_do/home.dart';
 
-import 'authenticator.dart';
-import 'login.dart';
+import 'file:///D:/FlutterProjects/z_to_do/lib/screens/addTask.dart';
+import 'file:///D:/FlutterProjects/z_to_do/lib/screens/allTasks.dart';
+import 'file:///D:/FlutterProjects/z_to_do/lib/screens/home.dart';
+
+import 'firebase connections/authenticator.dart';
+import 'screens/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +41,7 @@ void main() async {
             ),
         Task.id: (context) => Task(),
         Login.id: (context) => Login(),
+        AllTasks.id: (context) => AllTasks(),
       },
     ),
   );

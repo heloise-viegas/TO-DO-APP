@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:z_to_do/authenticator.dart';
+
+import 'file:///D:/FlutterProjects/z_to_do/lib/firebase%20connections/authenticator.dart';
 
 import 'constants.dart';
 

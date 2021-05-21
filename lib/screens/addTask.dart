@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'authenticator.dart';
-import 'constants.dart';
-import 'inputDate.dart';
-import 'inputText.dart';
+import '../firebase connections/authenticator.dart';
+import '../ui components/constants.dart';
+import '../ui components/inputDate.dart';
+import '../ui components/inputText.dart';
 
 class Task extends StatefulWidget {
   static String id = 'TaskScreen';

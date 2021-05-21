@@ -12,20 +12,21 @@ class Constants {
   static const double kIconSize = 30;
 
   static const String kWelcomeText = 'What\'s up,';
-  static const String kLblCategory = 'CATEGORIES';
+  static const String kLblCategory = 'HISTORY';
   static const String kLblToday = 'TODAY\'S TASKS';
-  static const String kCardTitle = ' tasks';
+  static const String kCardTitle = ' \/10 task';
   static const String kCardType = 'Business';
   static const String kTaskItemName = 'Daily meeting with team';
   static const String kUserName = 'Heloise Viegas';
-  static const String kCategoryTile = 'Categories';
-  static const String kTempTile = 'Templates';
-  static const String kAnalyticsTile = 'Analytics';
+  static const String kCategoryTile = 'Dummy';
+  static const String kTempTile = 'All Tasks';
+  static const String kAnalyticsTile = 'Dummy';
   static const String kConsistency = 'Consistency';
   static const String kInputHintText = 'Enter new task';
   static const String kBtnText = 'Add Task';
   static const String kUserNameText = 'Gmail Id';
   static const String kSignInBtn = 'Sign in with Google';
+  static const String kAppBarTitle = 'All Tasks';
 
   static const TextStyle kWelcomeTextStyle = TextStyle(
     fontSize: 40,
