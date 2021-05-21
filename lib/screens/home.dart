@@ -240,6 +240,7 @@ class _HomePortraitState extends State<HomePortrait> {
                                   items[i]['TaskId'],
                                   items[i]['TaskName'],
                                   items[i]['TaskComplete'],
+                                  items[i]['TaskDate'],
                                 ),
                               );
                               // }
@@ -465,6 +466,7 @@ class _HomeLandscapeState extends State<HomeLandscape> {
                                       items[i]['TaskId'],
                                       items[i]['TaskName'],
                                       items[i]['TaskComplete'],
+                                      items[i]['TaskDate'],
                                     ),
                                   );
                                 },

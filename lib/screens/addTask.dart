@@ -98,27 +98,52 @@ class _TaskState extends State<Task> {
                   Timestamp timestamp =
                       Timestamp.fromDate(DateTime.parse(setDate.toString()));
                   //print(setDate);
-                  Map<String, dynamic> task = Map();
-                  task['TaskName'] = taskTextController.text;
-                  task['TaskDate'] = timestamp; //timestamp
-                  FocusManager.instance.primaryFocus
-                      .unfocus(); //to hide keyboard on save
-                  try {
-                    bool isSaved = await auth.create(task);
-                    //      print(isSaved);
+                  if (taskTextController.text != '') {
+                    print('edtryr');
+                    Map<String, dynamic> task = Map();
+                    task['TaskName'] = taskTextController.text;
+                    task['TaskDate'] = timestamp; //timestamp
+                    FocusManager.instance.primaryFocus
+                        .unfocus(); //to hide keyboard on save
+                    try {
+                      bool isSaved = await auth.create(task);
+                      //      print(isSaved);
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Status'),
+                              content: isSaved
+                                  ? Text('Saved Successfully.')
+                                  : Text('Saved Failed.'),
+                              actions: [
+                                FlatButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    // Navigator.pop(
+                                    //     context, ModalRoute.withName("Home"));
+                                  },
+                                  child: Text("OK"),
+                                )
+                              ],
+                            );
+                          });
+                    } catch (e) {
+                      //   print(e.toString());
+                    }
+                  } else {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Text('Status'),
-                            content: isSaved
-                                ? Text('Saved Successfully.')
-                                : Text('Saved Failed.'),
+                            content: Text('Task cannot be empty.'),
                             actions: [
                               FlatButton(
                                 onPressed: () {
                                   Navigator.pop(context);
-                                  Navigator.pop(context);
+
                                   // Navigator.pop(
                                   //     context, ModalRoute.withName("Home"));
                                 },
@@ -127,8 +152,6 @@ class _TaskState extends State<Task> {
                             ],
                           );
                         });
-                  } catch (e) {
-                    //   print(e.toString());
                   }
                 },
                 child: Container(

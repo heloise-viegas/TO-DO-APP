@@ -104,6 +104,7 @@ class AllTasks extends StatelessWidget {
                       items[i]['TaskId'],
                       items[i]['TaskName'],
                       items[i]['TaskComplete'],
+                      items[i]['TaskDate'],
                     );
                     // }
                   },

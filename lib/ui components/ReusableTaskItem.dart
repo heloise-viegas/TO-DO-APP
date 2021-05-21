@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'file:///D:/FlutterProjects/z_to_do/lib/firebase%20connections/authenticator.dart';
 
@@ -8,13 +9,16 @@ class ReusableTaskItem extends StatefulWidget {
   bool isComplete;
   final String taskId;
   final String taskName;
-  ReusableTaskItem(this.taskId, this.taskName, this.isComplete);
+  final String taskDate;
+  ReusableTaskItem(this.taskId, this.taskName, this.isComplete, this.taskDate);
   @override
   _ReusableTaskItemState createState() => _ReusableTaskItemState();
 }
 
 class _ReusableTaskItemState extends State<ReusableTaskItem> {
   Authenticator auth = Authenticator();
+  final DateFormat formatter = DateFormat('dd-MMM-yyyy');
+  // formatter.format(taskDate);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,27 +44,44 @@ class _ReusableTaskItemState extends State<ReusableTaskItem> {
             borderRadius: BorderRadius.circular(28),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  widget.isComplete
-                      ? Icons.check_circle_rounded
-                      : Icons.check_circle_outlined,
-                  color: Colors.pink,
-                ),
-                SizedBox(
-                  width: 20,
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        widget.isComplete
+                            ? Icons.check_circle_rounded
+                            : Icons.check_circle_outlined,
+                        color: Colors.pink,
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Expanded(
+                        child: Text(
+                          //Constants.kTaskItemName,
+                          widget.taskName,
+                          style: widget.isComplete
+                              ? Constants.kTaskItemStrikeStyle
+                              : Constants.kTaskItemStyle,
+                          overflow: TextOverflow.visible,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Expanded(
-                  child: Text(
-                    //Constants.kTaskItemName,
-                    widget.taskName,
-                    style: widget.isComplete
-                        ? Constants.kTaskItemStrikeStyle
-                        : Constants.kTaskItemStyle,
-                    overflow: TextOverflow.visible,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 3.0, left: 45.0),
+                    child: Text(
+//Constants.kTaskItemName,
+                      widget.taskDate,
+                      style: Constants.kLblCategoryStyle,
+                    ),
                   ),
                 ),
               ],
@@ -71,3 +92,7 @@ class _ReusableTaskItemState extends State<ReusableTaskItem> {
     );
   }
 }
+
+// SizedBox(
+// width: 1,
+// ),

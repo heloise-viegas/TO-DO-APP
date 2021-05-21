@@ -10,6 +10,12 @@ class InputText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      // validator: (value) {
+      //   if (value == null || value.isEmpty) {
+      //     return 'Please enter some text';
+      //   }
+      //   return null;
+      // },
       controller: textController,
       cursorColor: Constants.kFabColour,
       // decoration: InputDecoration.collapsed(
